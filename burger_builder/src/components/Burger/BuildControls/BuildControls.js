@@ -13,7 +13,7 @@ const BuildControls = (props) => {
             { controls.map((data) => (
                 <BuildControl addClick={props.addClick} removeClick={props.removeClick} key={data.label} label={data.label} type={data.type} />
     ))}
-    <button className={css.OrderButton} disabled={props.purchasable}>Order</button>
+    <button className={css.OrderButton} onClick={props.processPurchase} disabled={props.purchasable}>Order</button>
         </div>
     )
 }

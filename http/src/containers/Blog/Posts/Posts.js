@@ -17,8 +17,7 @@ class Posts extends Component{
         axios.get("/posts").then(response=>{this.setState({posts:response.data.slice(0,5).map(data=>{return{...data,userId:'victor'}})})})
     }
     postSelectHandler=(id)=>{
-        console.log(this.props,id)
-        //this.props.history.push('/post/'+id)
+        //this.props.history.push('/post/'+id) 
         this.props.history.push({pathname:'/post/'+id})
     }
     render(){

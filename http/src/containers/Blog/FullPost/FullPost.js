@@ -14,7 +14,11 @@ class FullPost extends Component {
         this.loadData()
     }
     loadData=()=>{
-        axios.get("/posts/"+(this.props.match.params['id'])).then(response=>{ this.setState({post:response.data}); console.log(response.data)}).catch(error=>{console.log(error)})
+        if(this.props.match.params['id']){
+            if( !this.state.post || (this.state.post && this.state.post.id !=(this.props.match.params['id']))){
+                axios.get("/posts/"+(this.props.match.params['id'])).then(response=>{ this.setState({post:response.data}); console.log(response.data)}).catch(error=>{console.log(error)})
+            }
+        }
 
     }
     render() {

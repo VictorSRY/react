@@ -3,9 +3,8 @@ import axios from 'axios';
 import Posts from './Posts/Posts'
 
 import './Blog.css';
-import { Route, NavLink, Switch } from 'react-router-dom';
+import { Route, NavLink, Switch, Redirect } from 'react-router-dom';
 import NewPost from './NewPost/NewPost';
-import FullPost from './FullPost/FullPost';
 
 class Blog extends Component {
 
@@ -16,17 +15,13 @@ class Blog extends Component {
         axios.delete("/posts/"+index).then(response=>{console.log(response)})
     }
 
-    sendData=(data)=>{
-        axios.post("/posts",data).then(response=>{console.log(response)})
-        console.log(data)
-    }
     render () {
         return (
             <div className="Blog">
                 <header>
                     <nav>
                         <ul>
-                            <li><NavLink to="/" exact activeClassName="active">Home</NavLink></li>
+                            <li><NavLink to="/post" exact activeClassName="active">posts</NavLink></li>
                             <li><NavLink to={{pathname:"/new-post",hash:'lol'}}>New Post</NavLink></li>
                         </ul>
                     </nav>
@@ -36,6 +31,7 @@ class Blog extends Component {
                     <Route path='/new-post'  component={NewPost}/>
                     <Route path='/post' component={Posts}/>
                 </Switch>
+                <Redirect path='/' to='/post' />
             </div>
         );
     }

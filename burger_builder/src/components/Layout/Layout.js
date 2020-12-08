@@ -6,7 +6,7 @@ import Toolbar from '../Navigation/Toolbar/Toolbar';
 import css from './Layout.module.css'
 const Layout = (props) => {
     const [state, setState] = useState( {
-        showSideDrower:true,
+        showSideDrower:false,
     })
     const sideDrowerHandler = ()=>{
         console.log('back')

@@ -4,7 +4,9 @@ import Posts from './Posts/Posts'
 
 import './Blog.css';
 import { Route, NavLink, Switch, Redirect } from 'react-router-dom';
-import NewPost from './NewPost/NewPost';
+import asyncComponent from '../../hoc/asyncComponent';
+
+const lazyNewPost=asyncComponent(()=>import('./NewPost/NewPost'));
 
 class Blog extends Component {
 
@@ -28,7 +30,8 @@ class Blog extends Component {
                 </header>
                 {/*<Route path='/' exact render={()=><Posts/>}/>*/}
                 <Switch>
-                    <Route path='/new-post'  component={NewPost}/>
+                    {/*<Route path='/new-post'  component={NewPost}/>*/}
+                    <Route path='/new-post'  component={lazyNewPost}/>
                     <Route path='/post' component={Posts}/>
                 </Switch>
                 <Redirect path='/' to='/post' />

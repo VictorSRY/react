@@ -61,7 +61,7 @@ class BurgerBulder extends Component {
     }
 
     continueHandler = () => {
-        this.setState({ loading: true })
+        /*this.setState({ loading: true })
         //alert('purchased')
         const data = {
             name: 'Victor',
@@ -70,6 +70,16 @@ class BurgerBulder extends Component {
             order: this.state.ingredients,
         }
         oHttp.post('/orders.json', data).then(response => { console.log(response); this.setState({ loading: false, purchaseProcess: false }) }).catch(error => { console.log(error); this.setState({ loading: false, purchaseProcess: false }) })
+        */
+        const queryParams=[]
+        for(let i in this.state.ingredients){
+            queryParams.push(encodeURIComponent(i)+'='+encodeURIComponent(this.state.ingredients[i]) )
+        }
+        const queryString=queryParams.join('&')
+        this.props.history.push({
+            pathname:'/checkout',
+            search:queryString
+        })
     }
     render() {
         let summary = null

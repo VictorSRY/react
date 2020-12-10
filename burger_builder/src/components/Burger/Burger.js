@@ -1,7 +1,7 @@
 import css from './Burger.module.css'
 import BurgerIngerdients from './BurgerIngredients/BurgerIngredients'
 
-const burger = (props) =>{
+const Burger = (props) =>{
     let buildBurger = Object.keys(props.ingredients).map( key => {
         return [...Array(props.ingredients[key])].map((_,index) => {
             return <BurgerIngerdients key={ key+index } type= {key} />
@@ -19,4 +19,4 @@ const burger = (props) =>{
     )
 }
 
-export default burger
+export default Burger

@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { connect } from 'react-redux';
 import oHttp from '../../aios-o';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Burger from '../../components/Burger/Burger';
@@ -7,39 +8,33 @@ import Modal from '../../components/UI/Modal/Modal';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import Auxi from '../../hoc/Auxi';
 import WithErrorMessage from '../../hoc/WithErrorMessage';
-
-const INGREDIENTS_PRICE = {
-    salad: 10,
-    bacon: 20,
-    cheese: 15,
-    meat: 30,
-}
+import { addIngredients, getsetupdata, removeIngredients } from '../../store/actions/index';
 
 class BurgerBulder extends Component {
     state = {
-        ingredients: null,
-        totalPrice: 40,
         purchasable: true,
         purchaseProcess: false,
         loading: false,
-        error: false,
     }
     componentDidMount() {
-        oHttp.get('/ingredients.json').then(response => { this.setState({ ingredients: response.data }); this.updatepurchasable(response.data) }).catch(error=>{this.setState({error:true})})
+
+        //oHttp.get('/ingredients.json').then(response => { this.setState({ ingredients: response.data }); this.updatepurchasable(response.data) }).catch(error=>{this.setState({error:true})})
+        this.props.setData()
     }
-    updatepurchasable = (ingredients) => {
+    updatepurchasable = () => {
         let count = 0
         console.log('updatepurchasable')
-        const tempIngredients = { ...ingredients }
-        Object.keys(tempIngredients).map((key) => { count += ingredients[key]; })
+        const tempIngredients = { ...this.props.ingredients }
+        Object.keys(tempIngredients).map((key) => { count += tempIngredients[key]; })
         if (!this.state.purchasable && count < 1) {
             this.setState({ purchasable: true })
         }
         else if (this.state.purchasable && count >= 1) {
             this.setState({ purchasable: false })
         }
+        return this.state.purchasable
     }
-    addIngredients = (type) => {
+    /*addIngredients = (type) => {
         const tempState = { ...this.state.ingredients }
         tempState[type] = this.state.ingredients[type] + 1
         this.setState({ totalPrice: (this.state.totalPrice + INGREDIENTS_PRICE[type]), ingredients: tempState })
@@ -52,7 +47,7 @@ class BurgerBulder extends Component {
             this.setState({ totalPrice: (this.state.totalPrice - INGREDIENTS_PRICE[type]), ingredients: tempState })
             this.updatepurchasable(tempState)
         }
-    }
+    }*/
     processPurchase = () => {
         this.setState({ purchaseProcess: true })
     }
@@ -71,34 +66,30 @@ class BurgerBulder extends Component {
         }
         oHttp.post('/orders.json', data).then(response => { console.log(response); this.setState({ loading: false, purchaseProcess: false }) }).catch(error => { console.log(error); this.setState({ loading: false, purchaseProcess: false }) })
         */
-        const queryParams=[]
+        /*const queryParams=[]
         for(let i in this.state.ingredients){
             queryParams.push(encodeURIComponent(i)+'='+encodeURIComponent(this.state.ingredients[i]) )
         }
-        const queryString=queryParams.join('&')
+        const queryString=queryParams.join('&')*/
         this.props.history.push({
             pathname:'/checkout',
-            search:queryString
         })
     }
     render() {
         let summary = null
-        let burger = this.state.error?<p>cant Load ingredients</p>:<Spinner />
-        if (this.state.ingredients) {
+        let burger = this.props.error?<p>cant Load ingredients</p>:<Spinner />
+        if (this.props.ingredients) {
             burger = (
                 <Auxi>
-                    <Burger ingredients={this.state.ingredients} />
-                    <BuildControls addClick={this.addIngredients} removeClick={this.removeIngredients} purchasable={this.state.purchasable} processPurchase={this.processPurchase} />
+                    <Burger ingredients={this.props.ingredients} />
+                    <BuildControls addClick={this.props.addIngredients} removeClick={this.props.removeIngredients} purchasable={this.updatepurchasable()} processPurchase={this.processPurchase} />
                 </Auxi>
             )
-            summary = <OrderSummary ingredients={this.state.ingredients} total={this.state.totalPrice} hide={this.cancelPurchase} continue={this.continueHandler} />
-        }
-        if (this.state.loading) {
-            summary = <Spinner />
+            summary = <OrderSummary ingredients={this.props.ingredients} total={this.props.totalPrice} hide={this.cancelPurchase} continue={this.continueHandler} />
         }
         return (
             <Auxi>
-                <h1>{this.state.totalPrice}</h1>
+                <h1>{this.props.totalPrice}</h1>
                 <Modal show={this.state.purchaseProcess} hide={this.cancelPurchase}>
                     {summary}
                 </Modal>
@@ -108,4 +99,19 @@ class BurgerBulder extends Component {
     };
 }
 
-export default WithErrorMessage(BurgerBulder, oHttp);
+const mapDisptchToProps=(dispatch)=>{
+    return{
+        addIngredients:(ingredientName)=>dispatch(addIngredients(ingredientName)),
+        removeIngredients:(ingredientName)=>dispatch(removeIngredients(ingredientName)),
+        setData:()=>dispatch(getsetupdata())
+    }
+}
+const mapStateToProps=(state)=>{
+    return{
+        ingredients:state.ingredients,
+        totalPrice:state.totalPrice,
+        error:state.error,
+    };
+}
+
+export default connect(mapStateToProps,mapDisptchToProps)(WithErrorMessage(BurgerBulder, oHttp));

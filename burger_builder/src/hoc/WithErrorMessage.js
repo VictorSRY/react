@@ -10,7 +10,7 @@ const WithErrorMessage = (WrappedComponent,axios)=>{
         }
         componentDidMount(){
             this.reqInterceptor=axios.interceptors.request.use(req=>{this.setState({errorMessage:null});return req;});
-            this.resInterceptor=axios.interceptors.response.use(res=>res,error=>{this.setState({errorMessage:error.message})});
+            this.resInterceptor=axios.interceptors.response.use(res=>res,error=>{console.log('error');this.setState({errorMessage:error.message})});
         }
         componentWillUnmount(){
             axios.interceptors.request.eject(this.reqInterceptor)

@@ -3,8 +3,10 @@ import oHttp from "../../../aios-o";
 import Button from "../../../components/UI/Button/Button";
 import css from "./ContactData.module.css"
 import Input from '../../../components/UI/Input/Input'
+import { connect } from "react-redux";
+import { buyBurger } from "../../../store/actions";
 
-export default class ContactData extends Component{
+class ContactData extends Component{
     state = {
         form:{
             name:{
@@ -38,28 +40,52 @@ export default class ContactData extends Component{
                     options:[{value:'fastest',display:'fastest'},{value:'cheapest',display:'cheapest'}],
                 }
             },
-        },
-        eamil:'',
-        address:'',
+        }, 
+        formData:{
+            address: "",
+            deliveryType: "fastest",
+            email: "",
+            name: "",
+        }
     }
     CDSubmitHandler=(event)=>{
         event.preventDefault();
-        oHttp.post('/orders.json', {...this.state,ingredients:this.props.order}).then(response => { console.log(response); this.props.history.replace('/') }).catch(error => { console.log(error); })
+        const data={order:{...this.props.ingredients},totalPrice:totalPrice,userData:{...this.state.formData}}
+        this.props.buyBurger(data)
+    }
+    inputValueHandler=(event)=>{
+        console.log(event.target.name,event.target.value)
+        const formData =this.state.formData
+        console.log(formData)
+        formData[event.target.name]=event.target.value
+        this.setState({formData:formData})
     }
     render(){
         const elementArray=[]
         for(let key in this.state.form){
             const temp =this.state.form[key]
-            elementArray.push(<Input elementType={temp.elementType} elementConfig={temp.elementConfig} key={key}/>)
+            elementArray.push(<Input elementType={temp.elementType} elementConfig={temp.elementConfig} change={this.inputValueHandler} key={key}/>)
         }
         return(
             <div className={css.ContactData}>
                 <h4>enter Data</h4>
                 <form>
                     {elementArray}
-                    <Button type='Success' click={this.CDSubmitHandler}>submit</Button>
+                    <Button type='Success' click={this.CDSubmitHandler} >submit</Button>
                 </form>
             </div>
         )
     }
 }
+const mapStateToProps = (state) => {
+    return{
+        order:state.ingredients,
+        price:state.totalPrice,
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return{
+        buyBurger:(data)=>dispatch(buyBurger(data)),
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(ContactData)

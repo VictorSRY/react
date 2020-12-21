@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { connect } from 'react-redux';
 import Auxi from '../../hoc/Auxi'
+import { signOut } from '../../store/actions';
 import SideDrawer from '../Navigation/SideDrawer/SideDrawer';
 import Toolbar from '../Navigation/Toolbar/Toolbar';
 
@@ -15,12 +17,22 @@ const Layout = (props) => {
     }
     return (
         <Auxi >
-            <Toolbar toggle={sideDrowerHandler}/>
-            <SideDrawer show={state.showSideDrower} toggle={sideDrowerHandler}/>
+            <Toolbar toggle={sideDrowerHandler} isAuth={props.loggedIn} signOut={props.signOut}/>
+            <SideDrawer show={state.showSideDrower} toggle={sideDrowerHandler} isAuth={props.loggedIn} signOut={props.signOut}/>
             <main>
                 {props.children}
             </main>
         </Auxi>
     );
 };
-export default Layout;
+const mapStateToProps = state=>{
+    return {
+        loggedIn:state.auth.authenticated,
+    } 
+}
+const mapDispatchToProps = dispatch=>{
+    return {
+        signOut:()=>dispatch(signOut())
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(Layout);

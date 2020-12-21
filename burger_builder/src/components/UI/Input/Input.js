@@ -3,6 +3,8 @@ const Input =(props)=>{
     let inputElement=null
     switch(props.elementType){
         case ('input') : inputElement=<input className={css.InputElement} onChange={props.change} {...props.elementConfig}/>;
+        break;
+        case ('password') : inputElement=<input className={css.InputElement} onChange={props.change} {...props.elementConfig}/>;
         break; 
         case ('textArea') : inputElement=<input className={css.InputElement} onChange={props.change} {...props.elementConfig}/>;
         break; 

@@ -1,10 +1,10 @@
 import { Component } from "react";
-import oHttp from "../../../aios-o";
 import Button from "../../../components/UI/Button/Button";
 import css from "./ContactData.module.css"
 import Input from '../../../components/UI/Input/Input'
 import { connect } from "react-redux";
 import { buyBurger } from "../../../store/actions";
+import { withRouter } from "react-router-dom";
 
 class ContactData extends Component{
     state = {
@@ -50,7 +50,8 @@ class ContactData extends Component{
     }
     CDSubmitHandler=(event)=>{
         event.preventDefault();
-        const data={order:{...this.props.ingredients},totalPrice:totalPrice,userData:{...this.state.formData}}
+        console.log('router',this.props.history)
+        const data={order:{...this.props.order},totalPrice:this.props.price,userData:{...this.state.formData}}
         this.props.buyBurger(data)
     }
     inputValueHandler=(event)=>{
@@ -79,8 +80,10 @@ class ContactData extends Component{
 }
 const mapStateToProps = (state) => {
     return{
-        order:state.ingredients,
-        price:state.totalPrice,
+        order:state.burger.ingredients,
+        price:state.burger.totalPrice,
+        loading:state.order.loading,
+        error:state.order.error,
     }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -88,4 +91,4 @@ const mapDispatchToProps = (dispatch) => {
         buyBurger:(data)=>dispatch(buyBurger(data)),
     }
 }
-export default connect(mapStateToProps,mapDispatchToProps)(ContactData)
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(ContactData))

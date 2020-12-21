@@ -1,23 +1,19 @@
 import { Component } from "react";
+import { connect } from "react-redux";
 import oHttp from "../../aios-o";
 import Order from "../../components/Burger/Order/Order";
 import WithErrorMessage from "../../hoc/WithErrorMessage";
-
-const INGREDIENTS_PRICE = {
-    salad: 10,
-    bacon: 20,
-    cheese: 15,
-    meat: 30,
-}
+import { getOrders } from "../../store/actions"
 
 class Orders extends Component {
-    state = {
+    /*state = {
         Orders: [],
         totalPrice: 0,
         loading:false,
-    }
+    }*/
     componentDidMount() {
-        oHttp.get('/orders.json').then(response => { const dataArray=[]; for(let key in response.data){dataArray.push(response.data[key])}; this.setState({ Orders: dataArray,loading: false }); console.log(dataArray) }).catch(error => { this.setState({ loading: false });console.log(error) })
+        this.props.getOrders()
+        //oHttp.get('/orders.json').then(response => { const dataArray=[]; for(let key in response.data){dataArray.push(response.data[key])}; this.setState({ Orders: dataArray,loading: false }); console.log(dataArray) }).catch(error => { this.setState({ loading: false });console.log(error) })
     }
     /*getTotal = (ingredients) => {
         let price = 40
@@ -28,20 +24,33 @@ class Orders extends Component {
         return price
     }*/
     render() {
+        let totalPrice=0
         const orders = []
-        if (this.state.Orders) {
-            for (let order of this.state.Orders) {
-                console.log(order)
-                orders.push(<Order ingredients={order.ingredients} />)
+        if (this.props.orders) {
+            for (let order of this.props.orders) {
+                totalPrice+=order.totalPrice
+                orders.push(<Order ingredients={order.order} price={order.totalPrice}/>)
             }
         }
 
         return (
             <div>
                 {orders}
-                <h2>total price: {this.state.totalPrice}</h2>
+                <h2>total price: {totalPrice}&#8377;</h2>
             </div>
         )
     }
 }
-export default WithErrorMessage(Orders,oHttp)
+
+const mapStateToProps=(state)=>{
+    return{
+        orders:state.order.orders,
+
+    }
+}
+const mapDispatchToProps=(dispatch)=>{
+    return{
+        getOrders:()=>dispatch(getOrders())
+    }
+} 
+export default connect(mapStateToProps,mapDispatchToProps)(WithErrorMessage(Orders,oHttp))

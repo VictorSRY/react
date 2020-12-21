@@ -9,7 +9,7 @@ const Order =(props)=>{
         <div className={css.Order}>
             <p>Ingredient:</p>
             <ul>{ingredients}</ul>
-            <p>price: kjdsbf</p>
+            <p>price: {props.price}&#8377;</p>
         </div>
     )
 } 

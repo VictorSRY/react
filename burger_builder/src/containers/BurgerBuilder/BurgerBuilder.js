@@ -8,7 +8,7 @@ import Modal from '../../components/UI/Modal/Modal';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import Auxi from '../../hoc/Auxi';
 import WithErrorMessage from '../../hoc/WithErrorMessage';
-import { addIngredients, getsetupdata, removeIngredients } from '../../store/actions/index';
+import { addIngredients, getsetupdata, orderInIt, removeIngredients } from '../../store/actions/index';
 
 class BurgerBulder extends Component {
     state = {
@@ -23,7 +23,6 @@ class BurgerBulder extends Component {
     }
     updatepurchasable = () => {
         let count = 0
-        console.log('updatepurchasable')
         const tempIngredients = { ...this.props.ingredients }
         Object.keys(tempIngredients).map((key) => { count += tempIngredients[key]; })
         if (!this.state.purchasable && count < 1) {
@@ -71,6 +70,7 @@ class BurgerBulder extends Component {
             queryParams.push(encodeURIComponent(i)+'='+encodeURIComponent(this.state.ingredients[i]) )
         }
         const queryString=queryParams.join('&')*/
+        this.props.orderInIt()
         this.props.history.push({
             pathname:'/checkout',
         })
@@ -103,14 +103,15 @@ const mapDisptchToProps=(dispatch)=>{
     return{
         addIngredients:(ingredientName)=>dispatch(addIngredients(ingredientName)),
         removeIngredients:(ingredientName)=>dispatch(removeIngredients(ingredientName)),
-        setData:()=>dispatch(getsetupdata())
+        setData:()=>dispatch(getsetupdata()),
+        orderInIt:()=>dispatch(orderInIt()),
     }
 }
 const mapStateToProps=(state)=>{
     return{
-        ingredients:state.ingredients,
-        totalPrice:state.totalPrice,
-        error:state.error,
+        ingredients:state.burger.ingredients,
+        totalPrice:state.burger.totalPrice,
+        error:state.burger.error,
     };
 }
 

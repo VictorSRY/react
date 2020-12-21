@@ -1,6 +1,6 @@
 import { Component } from "react";
 import { connect } from "react-redux";
-import { Route } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 import CheckoutSummary from "../../components/CheckoutSummary/CheckoutSummary";
 import ContactData from "./ContactData/ContactData";
 
@@ -27,6 +27,7 @@ class Checkout extends Component{
     render(){
         return (
             <div>
+                {this.props.purchased?<Redirect to="/"/>:null}
                 <CheckoutSummary ingredients={this.props.ingredients} continue={this.continueHandler} cancle={this.cancleHandler}/>
                 {/*<Route path={this.props.match.path+'/contact-data'} render={(props)=>(<ContactData order={this.props.ingredients} {...props}/>)}/>*/}
                 <Route path={this.props.match.path+'/contact-data'} component={ContactData}/>
@@ -37,7 +38,8 @@ class Checkout extends Component{
 
 const mapStatetoProps=state=>{
     return {
-        ingredients:state.ingredients,
+        ingredients:state.burger.ingredients,
+        purchased:state.order.purchased
     }
 }
 const mapDispatchtoProps=dispatch=>{

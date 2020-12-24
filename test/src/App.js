@@ -1,16 +1,21 @@
-import { useState } from 'react'
+import React from 'react'
+import { Route, Switch } from 'react-router';
 import './App.css';
 
-import Layout from './hoc/layout/Layout';
 import Blog from './container/BlogPage/BlogPage';
-import SignIn from './component/SignIn/SignIn';
+import SignIn from './container/SignIn/SignIn';
 
 function App() {
-  {/*<Layout>
-    <Blog></Blog>
-  </Layout>*/}
+  {/**/}
   return (
-    <SignIn></SignIn>
+    <React.Fragment>
+      <Switch>
+        <Route path="/signIn" component={SignIn}/>
+        <Route path="/home" component={Blog}/>
+        <Route path="/" component={Blog}/>
+      </Switch>
+    </React.Fragment>
+    
   );
 }
 

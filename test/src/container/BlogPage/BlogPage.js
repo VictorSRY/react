@@ -1,10 +1,11 @@
 import React from "react"
 import AboutMe from "../../component/AboutMe/AboutMe"
 import Post from "../../component/Post/Post"
+import Layout from "../../hoc/layout/Layout"
 import css from "./BlogPage.module.css"
 const BlogPage = () => {
     return (
-        <React.Fragment>
+        <Layout>
             {/*<div className={css.header}>
                 <h2>Blog Name</h2>
             </div>*/}
@@ -26,8 +27,7 @@ const BlogPage = () => {
                     </div>
                 </div>
             </div>
-
-        </React.Fragment>
+        </Layout>
     )
 }
 export default BlogPage

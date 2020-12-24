@@ -6,7 +6,7 @@ const Header = (props) => {
     return (
         <Navbar bg="light" expand="lg">
             <Navbar.Brand as={Link} to="/">
-            <img src="https://cdn0.iconfinder.com/data/icons/social-networks-and-media-flat-icons/136/Social_Media_Socialmedia_network_share_socialnetwork_network-22-512.png" width="30" height="30" class="d-inline-block align-top" alt=""/>
+            <img src="https://cdn0.iconfinder.com/data/icons/social-networks-and-media-flat-icons/136/Social_Media_Socialmedia_network_share_socialnetwork_network-22-512.png" width="30" height="30" className="d-inline-block align-top" alt=""/>
             {" "}
             <span style={{color:"rgb(237 120 38)"}}>BloggerStop</span>
             </Navbar.Brand>
